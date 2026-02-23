@@ -1,0 +1,7 @@
+language_servers:
+  python:
+    enabled: true
+    root_dir: src/backend
+  typescript:
+    enabled: true
+    root_dir: src/frontend

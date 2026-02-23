@@ -1,0 +1,203 @@
+version: 1.0
+name: full_stack_feature_lifecycle
+
+actors:
+  - human
+  - planning_agent
+  - code_implementer
+  - code_reviewer
+  - security_reviewer
+  - documentation_agent
+
+initial_state: feature_requested
+
+states:
+
+  feature_requested:
+    type: entry
+    actor: human
+    on_enter:
+      - description: "Human submits feature request"
+    transitions:
+      - to: planning
+        condition: "feature_request_submitted"
+
+  planning:
+    actor: planning_agent
+    on_enter:
+      - action: "analyze_requirements"
+      - action: "ask_clarifying_questions"
+      - action: "produce_markdown_plan"
+    exit_condition: "human_plan_approval"
+    transitions:
+      - to: plan_approved
+        condition: "plan_approved_by_human"
+      - to: planning
+        condition: "clarification_required"
+      - to: feature_requested
+        condition: "plan_rejected"
+
+  plan_approved:
+    type: intermediate
+    on_enter:
+      - action: "lock_plan_scope"
+    transitions:
+      - to: coding
+        condition: "start_implementation"
+
+  coding:
+    actor: code_implementer
+    on_enter:
+      - action: "execute_tdd_cycle"
+      - action: "implement_plan_tasks"
+      - action: "generate_tests"
+      - action: "produce_implementation_report"
+    exit_condition: "all_tasks_complete_and_tests_passing"
+    transitions:
+      - to: code_review
+        condition: "implementation_complete"
+      - to: planning
+        condition: "plan_ambiguity_detected"
+      - to: human_intervention
+        condition: "blocking_issue"
+
+  code_review:
+    actor: code_reviewer
+    on_enter:
+      - action: "verify_plan_compliance"
+      - action: "enforce_architecture_rules"
+      - action: "assess_test_quality"
+      - action: "produce_review_report"
+    transitions:
+      - to: security_review
+        condition: "review_status_approved"
+      - to: coding
+        condition: "review_status_minor_changes"
+      - to: coding
+        condition: "review_status_blocked"
+
+  security_review:
+    actor: security_reviewer
+    on_enter:
+      - action: "audit_authentication"
+      - action: "audit_authorization"
+      - action: "check_idor"
+      - action: "validate_csrf"
+      - action: "inspect_cors"
+      - action: "check_injection_vectors"
+      - action: "produce_security_report"
+    transitions:
+      - to: documentation
+        condition: "security_status_secure"
+      - to: coding
+        condition: "security_status_minor_findings"
+      - to: coding
+        condition: "security_status_critical"
+
+  documentation:
+    actor: documentation_agent
+    on_enter:
+      - action: "update_docstrings"
+      - action: "update_readme"
+      - action: "clarify_architecture_comments"
+      - action: "produce_documentation_report"
+    exit_condition: "documentation_complete"
+    transitions:
+      - to: human_final_approval
+        condition: "docs_updated"
+
+  human_final_approval:
+    actor: human
+    on_enter:
+      - action: "review_full_feature"
+      - action: "confirm_version_bump"
+    transitions:
+      - to: complete
+        condition: "approved_for_merge"
+      - to: coding
+        condition: "changes_requested"
+      - to: planning
+        condition: "scope_change_required"
+
+  human_intervention:
+    actor: human
+    description: "Triggered when blocking issue detected"
+    transitions:
+      - to: coding
+        condition: "technical_resolution"
+      - to: planning
+        condition: "requirement_revision"
+
+  complete:
+    type: terminal
+    on_enter:
+      - action: "merge_feature"
+      - action: "mark_feature_done"
+
+policies:
+
+  constraints:
+    - "No coding without approved plan"
+    - "No merge without code_review and security_review approval"
+    - "Documentation must follow security approval"
+    - "Human is final authority"
+
+  loops:
+    - from: coding
+      to: code_review
+    - from: coding
+      to: security_review
+    - from: code_review
+      to: coding
+    - from: security_review
+      to: coding
+
+  escalation_rules:
+    - condition: "critical_security_issue"
+      force_transition: coding
+    - condition: "architecture_violation"
+      force_transition: coding
+      
+artifacts:
+  tracking_root: "/docs/features/{feature-slug}"
+  status_file: "STATUS.md"
+  
+  by_state:
+    planning:
+      creates:
+        - "STATUS.md"
+        - "plan.md"
+    coding:
+      reads:
+        - "STATUS.md"
+        - "plan.md"
+      updates:
+        - "STATUS.md"
+    code_review:
+      reads:
+        - "STATUS.md"
+        - "plan.md"
+      creates:
+        - "code-review.md"
+      updates:
+        - "STATUS.md"
+    security_review:
+      reads:
+        - "STATUS.md"
+        - "plan.md"
+        - "code-review.md"
+      creates:
+        - "security-review.md"
+      updates:
+        - "STATUS.md"
+    documentation:
+      reads:
+        - "STATUS.md"
+        - "plan.md"
+        - "code-review.md"
+        - "security-review.md"
+      creates:
+        - "docs-report.md"
+      updates:
+        - "STATUS.md"
+
