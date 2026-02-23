@@ -9,9 +9,9 @@ date: 2026-02-23
 
 This is a modern full-stack application using a React/Vite frontend and a FastAPI/PostgreSQL backend. To optimize context limits and keep instructions relevant, we use progressive disclosure.
 
-## Feature Development Workflow (Manual)
+## MCP Servers
 
-This project uses a structured feature lifecycle defined in `@rules/full_stack_feature_lifecycle.yaml`. Follow this workflow manually until automation is implemented.
+Use the available MCP servers.
 
 ### Workflow Overview
 
