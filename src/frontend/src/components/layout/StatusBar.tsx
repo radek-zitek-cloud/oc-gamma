@@ -1,7 +1,6 @@
 import { useBackendHealth } from "@/hooks/useSystem";
 import { useAuthStore } from "@/store/authStore";
-
-const APP_VERSION = import.meta.env.VITE_APP_VERSION || "0.1.0";
+import { version as APP_VERSION } from "../../../package.json";
 
 export function StatusBar() {
   const user = useAuthStore((state) => state.user);

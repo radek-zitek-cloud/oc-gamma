@@ -38,7 +38,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="OC Gamma API",
     description="Full-stack application backend",
-    version="0.2.0",
+    version="0.1.1",
     lifespan=lifespan,
 )
 
@@ -88,10 +88,10 @@ app.include_router(api_router)
 @app.get("/health")
 async def health_check() -> dict[str, str]:
     """Health check endpoint."""
-    return {"status": "ok", "version": "0.2.0"}
+    return {"status": "ok", "version": "0.1.1"}
 
 
 @app.get("/")
 async def root() -> dict[str, str]:
     """Root endpoint."""
-    return {"message": "Welcome to OC Gamma API", "version": "0.2.0"}
+    return {"message": "Welcome to OC Gamma API", "version": "0.1.1"}
