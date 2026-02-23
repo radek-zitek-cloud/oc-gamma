@@ -6,7 +6,8 @@
   "autoupdate": true,
 
   "permission": {
-    "lsp": "allow"
+    "lsp": "allow",
+    "*": "allow"
   },
 
   "formatter": {
