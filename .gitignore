@@ -24,6 +24,11 @@ dist-ssr
 *.sw?
 
 .venv/
+__pycache__
+*.pyc
+
+.pytest_cache/
+.ruff_cache/
 
 logs/
 data/
