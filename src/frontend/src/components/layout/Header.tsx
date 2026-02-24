@@ -25,7 +25,7 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full h-14 z-50 border-b bg-card flex items-center justify-between px-4">
+    <header className="fixed top-0 left-0 w-full h-14 z-50 border-b bg-secondary flex items-center justify-between px-4">
       <div className="flex items-center gap-2">
         <Link to="/" className="font-bold text-lg">
           OC Gamma
