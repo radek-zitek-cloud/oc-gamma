@@ -9,7 +9,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Compute base directory (project root)
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
-DATA_DIR = BASE_DIR / "../../data"
+DATA_DIR = BASE_DIR / "data"
 
 
 class Settings(BaseSettings):

@@ -28,6 +28,9 @@ class User(Base):
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
     is_superuser: Mapped[bool] = mapped_column(default=False, nullable=False)
     role: Mapped[str] = mapped_column(String(50), default="USER", nullable=False)
+    theme_preference: Mapped[str] = mapped_column(
+        String(20), default="system", nullable=False
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime, default=func.now(), nullable=False
     )

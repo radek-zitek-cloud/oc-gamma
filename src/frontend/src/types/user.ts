@@ -2,6 +2,8 @@
  * User type definitions.
  */
 
+import type { ThemePreference } from "./theme";
+
 export interface User {
   id: number;
   email: string;
@@ -9,6 +11,7 @@ export interface User {
   full_name: string | null;
   is_active: boolean;
   role: "USER" | "ADMIN";
+  theme_preference: ThemePreference;
   created_at: string;
   updated_at: string;
 }

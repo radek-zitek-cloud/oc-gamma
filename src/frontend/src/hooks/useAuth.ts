@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { api } from "@/lib/api";
 import { logger } from "@/lib/logger";
 import { useAuthStore } from "@/store/authStore";
+import { useThemeStore } from "@/store/themeStore";
 import type { LoginCredentials, RegisterData, User, UserUpdate, PasswordChange } from "@/types/user";
 
 // Query keys
@@ -23,6 +24,7 @@ export const authKeys = {
 export function useCurrentUser() {
   const setUser = useAuthStore((state) => state.setUser);
   const setLoading = useAuthStore((state) => state.setLoading);
+  const setTheme = useThemeStore((state) => state.setTheme);
 
   const query = useQuery({
     queryKey: authKeys.user(),
@@ -37,13 +39,18 @@ export function useCurrentUser() {
   useEffect(() => {
     if (query.isSuccess) {
       setUser(query.data);
+      // Sync theme preference from user data on initial load
+      // Server theme takes precedence over localStorage for authenticated users
+      if (query.data.theme_preference) {
+        setTheme(query.data.theme_preference);
+      }
       setLoading(false);
     }
     if (query.isError) {
       setUser(null);
       setLoading(false);
     }
-  }, [query.isSuccess, query.isError, query.data, setUser, setLoading]);
+  }, [query.isSuccess, query.isError, query.data, setUser, setLoading, setTheme]);
 
   return query;
 }
@@ -53,6 +60,7 @@ export function useCurrentUser() {
  */
 export function useLogin() {
   const setUser = useAuthStore((state) => state.setUser);
+  const setTheme = useThemeStore((state) => state.setTheme);
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -70,6 +78,11 @@ export function useLogin() {
     },
     onSuccess: (data) => {
       setUser(data);
+      // Sync theme preference from user data
+      // Server theme takes precedence over localStorage for authenticated users
+      if (data.theme_preference) {
+        setTheme(data.theme_preference);
+      }
       queryClient.setQueryData(authKeys.user(), data);
       logger.info("User logged in successfully", { username: data.username });
     },
