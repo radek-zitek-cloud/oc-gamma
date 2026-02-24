@@ -67,13 +67,23 @@ export function Profile() {
                 data-testid="profile-fullname-input"
               />
             </div>
-            <Button
-              type="submit"
-              disabled={updateProfile.isPending}
-              data-testid="profile-save-button"
-            >
-              {updateProfile.isPending ? "Saving..." : "Save Changes"}
-            </Button>
+            <div className="flex gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                asChild
+                data-testid="profile-cancel-button"
+              >
+                <Link to="/">Cancel</Link>
+              </Button>
+              <Button
+                type="submit"
+                disabled={updateProfile.isPending}
+                data-testid="profile-save-button"
+              >
+                {updateProfile.isPending ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
