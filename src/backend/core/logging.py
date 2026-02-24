@@ -12,7 +12,7 @@ from typing import Any
 from backend.core.config import BASE_DIR
 
 # Logs directory
-LOGS_DIR = BASE_DIR / "../../logs"
+LOGS_DIR = BASE_DIR / "logs"
 LOGS_DIR.mkdir(exist_ok=True)
 
 

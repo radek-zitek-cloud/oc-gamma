@@ -31,6 +31,7 @@ export interface RegisterData {
 export interface PasswordChange {
   current_password: string;
   new_password: string;
+  confirm_password: string;
 }
 
 export interface UserUpdate {

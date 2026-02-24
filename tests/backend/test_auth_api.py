@@ -270,7 +270,8 @@ class TestChangePasswordEndpoint:
             "/api/v1/auth/me/password",
             json={
                 "current_password": "oldpassword123",
-                "new_password": "newpassword456"
+                "new_password": "newpassword456",
+                "confirm_password": "newpassword456"
             }
         )
 
@@ -285,7 +286,8 @@ class TestChangePasswordEndpoint:
             "/api/v1/auth/me/password",
             json={
                 "current_password": "wrongpassword",
-                "new_password": "newpassword456"
+                "new_password": "newpassword456",
+                "confirm_password": "newpassword456"
             }
         )
 
@@ -305,3 +307,61 @@ class TestChangePasswordEndpoint:
         )
 
         assert response.status_code == 401
+
+    @pytest.mark.asyncio
+    async def test_change_password_mismatched_confirmation(self, logged_in_client):
+        """RED: Test password change with mismatched confirm_password."""
+        response = await logged_in_client.put(
+            "/api/v1/auth/me/password",
+            json={
+                "current_password": "oldpassword123",
+                "new_password": "newpassword456",
+                "confirm_password": "differentpassword789"
+            }
+        )
+
+        assert response.status_code == 422
+        data = response.json()
+        assert "passwords do not match" in data["detail"][0]["msg"].lower()
+
+    @pytest.mark.asyncio
+    async def test_change_password_with_confirmation_success(self, logged_in_client):
+        """RED: Test successful password change with confirm_password."""
+        response = await logged_in_client.put(
+            "/api/v1/auth/me/password",
+            json={
+                "current_password": "oldpassword123",
+                "new_password": "newpassword456",
+                "confirm_password": "newpassword456"
+            }
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["message"] == "Password changed successfully"
+
+    @pytest.mark.asyncio
+    async def test_change_password_rate_limiting(self, logged_in_client):
+        """RED: Test rate limiting on password change endpoint."""
+        # Make 3 failed attempts (within limit)
+        for _ in range(3):
+            response = await logged_in_client.put(
+                "/api/v1/auth/me/password",
+                json={
+                    "current_password": "wrongpassword",
+                    "new_password": "newpassword456",
+                    "confirm_password": "newpassword456"
+                }
+            )
+            assert response.status_code == 400  # Wrong password
+
+        # 4th attempt should be rate limited
+        response = await logged_in_client.put(
+            "/api/v1/auth/me/password",
+            json={
+                "current_password": "wrongpassword",
+                "new_password": "newpassword456",
+                "confirm_password": "newpassword456"
+            }
+        )
+        assert response.status_code == 429  # Too Many Requests
