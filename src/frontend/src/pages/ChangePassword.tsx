@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -59,7 +60,15 @@ export function ChangePassword() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Change Password</h1>
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" asChild>
+          <Link to="/profile" data-testid="password-back-button">
+            <ArrowLeft className="h-5 w-5" />
+            <span className="sr-only">Back to Profile</span>
+          </Link>
+        </Button>
+        <h1 className="text-3xl font-bold">Change Password</h1>
+      </div>
 
       <Card data-testid="password-change-form">
         <CardHeader>
@@ -184,7 +193,15 @@ export function ChangePassword() {
               </div>
             </div>
 
-            <div className="pt-2">
+            <div className="flex gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                asChild
+                data-testid="password-cancel-button"
+              >
+                <Link to="/profile">Cancel</Link>
+              </Button>
               <Button
                 type="submit"
                 disabled={changePassword.isPending}

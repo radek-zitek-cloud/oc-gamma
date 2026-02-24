@@ -1,6 +1,8 @@
 # Feature: Split Profile and Password Pages
 
-## State: code_review
+## State: coding
+
+**Status Update (2026-02-24):** Code review completed - BLOCKED, requires fixes before proceeding to security review.
 
 ## Plan
 - **Location:** `/docs/features/split-profile-password/plan.md`
@@ -37,17 +39,50 @@
 
 ## Reports
 - [x] Plan: `/docs/features/split-profile-password/plan.md`
-- [ ] Code Review: `/docs/features/split-profile-password/code-review.md`
+- [x] Code Review: `/docs/features/split-profile-password/code-review.md`
 - [ ] Security Review: `/docs/features/split-profile-password/security-review.md`
 - [ ] Documentation: `/docs/features/split-profile-password/docs-report.md`
+
+## Code Review Summary
+- **Verdict:** BLOCKED - Requires fixes before security review
+- **Critical Issues:** 2 (Missing tests, Route path mismatch)
+- **Major Issues:** 2 (Missing navigation elements)
+- **Minor Issues:** 3
 
 ## Approval Log
 - 2026-02-24 - Plan created by Planning Agent
 - 2026-02-24 - Implementation completed by Code Implementer
-- [ ] **NEXT: Code Review**
+- 2026-02-24 - Code review completed - **BLOCKED** (see Required Fixes below)
+- [ ] **NEXT: Fix issues and re-submit for code review**
 - [ ] Pending - Code review passed
 - [ ] Pending - Security review passed
 - [ ] Pending - Final approval by human
+
+## Required Fixes (from Code Review)
+
+### Critical Issues (Blocking)
+1. **Write Test Files** - TDD is mandatory per project rules
+   - `tests/frontend/store/notificationStore.test.ts`
+   - `tests/frontend/hooks/useToast.test.ts`
+   - `tests/frontend/pages/ChangePassword.test.tsx`
+   - `tests/frontend/pages/Profile.test.tsx`
+   - `tests/backend/test_auth_api.py` (add password confirmation tests)
+   - `tests/e2e/password-change.spec.ts`
+
+**Note:** Route path `/password` is the desired state (changed from `/profile/password` for better UX).
+
+### Major Issues (Should Fix)
+3. **Add Security Card to Profile Page**
+   - Add navigation link to password change page as specified in plan
+
+4. **Add Navigation to ChangePassword Page** ✅ COMPLETE
+   - Back button with ArrowLeft icon - Already implemented
+   - Cancel button - Added
+
+### Minor Issues
+5. Add `model_config = ConfigDict(extra="ignore")` to PasswordChange schema
+6. Add data-testid to Profile heading
+7. Review import ordering conventions
 
 ## Implementation Phases
 
@@ -56,10 +91,10 @@
 | 1 | Backend Schema Updates | **COMPLETE** |
 | 2 | Toast Notification System | **COMPLETE** |
 | 3 | Frontend Types & Store | **COMPLETE** |
-| 4 | Profile Page Refactor | **COMPLETE** |
+| 4 | Profile Page Refactor | **COMPLETE** (missing navigation) |
 | 5 | Password Change Page | **COMPLETE** |
-| 6 | Route Updates | **COMPLETE** |
-| 7 | Testing (Unit/Integration/E2E) | **PENDING** |
+| 6 | Route Updates | **COMPLETE** - route path `/password` is the desired state |
+| 7 | Testing (Unit/Integration/E2E) | **NOT STARTED** - required before security review |
 
 ## Verification Results
 
@@ -102,6 +137,108 @@ npm run lint
 
 ## Git Branch
 `feat/split-profile-password`
+
+## Specific Code Changes Required
+
+### 1. Route Path (App.tsx)
+**Status:** ✅ ACCEPTED - `/password` is the desired state
+
+The route path was intentionally changed from `/profile/password` to `/password` for better UX with a cleaner standalone URL.
+
+### 2. Add Security Card to Profile.tsx (after line 79)
+Add this Card component before the closing `</div>`:
+```typescript
+<Card>
+  <CardHeader>
+    <CardTitle>Security</CardTitle>
+    <CardDescription>
+      Manage your password and account security.
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <Link
+      to="/password"
+      className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted"
+      data-testid="profile-change-password-link"
+    >
+      <div className="flex items-center gap-3">
+        <Key className="h-5 w-5 text-muted-foreground" />
+        <div>
+          <p className="font-medium">Change Password</p>
+          <p className="text-sm text-muted-foreground">
+            Update your password to keep your account secure
+          </p>
+        </div>
+      </div>
+      <ChevronRight className="h-5 w-5 text-muted-foreground" />
+    </Link>
+  </CardContent>
+</Card>
+```
+Don't forget to add imports:
+```typescript
+import { Link } from "react-router-dom";
+import { Key, ChevronRight } from "lucide-react";
+```
+
+### 3. Add Navigation to ChangePassword.tsx
+Replace lines 61-62:
+```typescript
+// BEFORE:
+<div className="space-y-6">
+  <h1 className="text-3xl font-bold">Change Password</h1>
+
+// AFTER:
+<div className="space-y-6">
+  <div className="flex items-center gap-4">
+    <Button variant="ghost" size="icon" asChild>
+      <Link to="/profile" data-testid="password-back-button">
+        <ArrowLeft className="h-5 w-5" />
+        <span className="sr-only">Back to Profile</span>
+      </Link>
+    </Button>
+    <h1 className="text-3xl font-bold">Change Password</h1>
+  </div>
+```
+
+Replace lines 187-195 (the button div):
+```typescript
+// BEFORE:
+<div className="pt-2">
+  <Button
+    type="submit"
+    disabled={changePassword.isPending}
+    data-testid="password-submit-button"
+  >
+    {changePassword.isPending ? "Changing..." : "Change Password"}
+  </Button>
+</div>
+
+// AFTER:
+<div className="flex gap-3 pt-2">
+  <Button
+    type="button"
+    variant="outline"
+    asChild
+    data-testid="password-cancel-button"
+  >
+    <Link to="/profile">Cancel</Link>
+  </Button>
+  <Button
+    type="submit"
+    disabled={changePassword.isPending}
+    data-testid="password-submit-button"
+  >
+    {changePassword.isPending ? "Changing..." : "Change Password"}
+  </Button>
+</div>
+```
+
+Don't forget to add imports:
+```typescript
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+```
 
 ## Changed Files Summary
 ```
