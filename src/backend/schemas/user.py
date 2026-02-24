@@ -4,8 +4,13 @@ Strictly separate from SQLAlchemy models.
 """
 
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+
+
+# Theme preference type
+ThemePreference = Literal["light", "dark", "system"]
 
 
 class UserBase(BaseModel):
@@ -31,6 +36,12 @@ class UserUpdate(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
 
+class ThemePreferenceUpdate(BaseModel):
+    """Schema for updating theme preference."""
+
+    theme_preference: ThemePreference
+
+
 class UserResponse(UserBase):
     """Schema for user API responses (excludes sensitive data)."""
 
@@ -39,6 +50,7 @@ class UserResponse(UserBase):
     id: int
     is_active: bool
     role: str
+    theme_preference: ThemePreference
     created_at: str
     updated_at: str
 
@@ -61,6 +73,7 @@ class UserInDB(UserBase):
     is_active: bool
     is_superuser: bool
     role: str
+    theme_preference: ThemePreference
     created_at: str
     updated_at: str
 

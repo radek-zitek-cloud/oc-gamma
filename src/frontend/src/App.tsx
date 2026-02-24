@@ -6,6 +6,7 @@ import { Dashboard } from "@/pages/Dashboard";
 import { Login } from "@/pages/Login";
 import { Profile } from "@/pages/Profile";
 import { Register } from "@/pages/Register";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { useCurrentUser } from "@/hooks/useAuth";
 import { useAuthStore } from "@/store/authStore";
 
@@ -53,8 +54,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AuthChecker>
-          <Routes>
+        <ThemeProvider>
+          <AuthChecker>
+            <Routes>
           <Route
             path="/login"
             element={
@@ -88,7 +90,8 @@ function App() {
             }
           />
         </Routes>
-        </AuthChecker>
+          </AuthChecker>
+        </ThemeProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );

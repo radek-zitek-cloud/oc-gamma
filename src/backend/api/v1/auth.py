@@ -21,6 +21,7 @@ from backend.repositories.user import UserRepository
 from backend.schemas.auth import LoginRequest, Token
 from backend.schemas.user import (
     PasswordChange,
+    ThemePreferenceUpdate,
     UserCreate,
     UserResponse,
     UserUpdate,
@@ -314,3 +315,39 @@ async def change_password(
         {"user_id": current_user.id},
     )
     return {"message": "Password changed successfully"}
+
+
+@router.patch(
+    "/me/theme",
+    response_model=UserResponse,
+    summary="Update theme preference",
+)
+async def update_theme_preference(
+    request: Request,
+    theme_data: ThemePreferenceUpdate,
+    current_user: Annotated[UserResponse, Depends(get_current_user)],
+    repo: Annotated[UserRepository, Depends(get_user_repo)],
+) -> UserResponse:
+    """
+    Update the current user's theme preference.
+
+    Args:
+        request: FastAPI request object (for rate limiting).
+        theme_data: The theme preference to set (light, dark, or system).
+        current_user: The authenticated user.
+        repo: User repository.
+
+    Returns:
+        The updated user profile.
+    """
+    # Check rate limit (10 requests per minute for theme updates)
+    check_rate_limit(request, max_requests=10, window_seconds=60)
+
+    updated = await repo.update_user(
+        current_user, {"theme_preference": theme_data.theme_preference}
+    )
+    logger.info(
+        f"Theme preference updated: {theme_data.theme_preference}",
+        {"user_id": updated.id}
+    )
+    return UserResponse.model_validate(updated)
