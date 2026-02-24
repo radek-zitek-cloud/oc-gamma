@@ -1,6 +1,7 @@
 # Feature: Color System Review
 
 ## State: Implementation Complete
+## Branch: `feature/color-system-review`
 
 ## Overview
 Comprehensive review and update of frontend color system to strictly adhere to the color system specification in `docs/color-system.md`.

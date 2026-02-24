@@ -5,6 +5,20 @@ version: 2.1.0
 date: 2026-02-23
 ---
 
+# ⚠️ CRITICAL RULES - READ FIRST
+
+## 🚫 NEVER Commit to main/master Branch
+**ALWAYS create a feature branch before making any changes.**
+
+Before starting ANY work:
+1. Check current branch: `git branch`
+2. If on main/master: `git checkout -b feature/descriptive-name`
+3. Only then begin implementing changes
+
+**This is a hard requirement. Violations must be immediately corrected.**
+
+---
+
 # Full Stack Project
 
 This is a modern full-stack application using a React/Vite frontend and a FastAPI/PostgreSQL backend. To optimize context limits and keep instructions relevant, we use progressive disclosure.
