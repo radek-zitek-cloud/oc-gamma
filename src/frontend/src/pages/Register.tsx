@@ -39,7 +39,7 @@ export function Register() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/50 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md" data-testid="register-form">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Register</CardTitle>
@@ -136,7 +136,7 @@ export function Register() {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-primary hover:underline"
+              className="text-accent-foreground hover:underline"
               data-testid="register-login-link"
             >
               Login

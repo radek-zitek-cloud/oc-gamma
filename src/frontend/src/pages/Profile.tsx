@@ -52,7 +52,6 @@ export function Profile() {
                 onChange={(e) =>
                   setProfileData({ ...profileData, email: e.target.value })
                 }
-                className="bg-primary/10"
                 data-testid="profile-email-input"
               />
             </div>
@@ -65,7 +64,6 @@ export function Profile() {
                 onChange={(e) =>
                   setProfileData({ ...profileData, full_name: e.target.value })
                 }
-                className="bg-primary/10"
                 data-testid="profile-fullname-input"
               />
             </div>

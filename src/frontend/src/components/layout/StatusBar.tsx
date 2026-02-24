@@ -10,7 +10,7 @@ export function StatusBar() {
   const isConnected = !isError && health?.status === "ok";
 
   return (
-    <footer className="fixed bottom-0 left-0 w-full h-8 z-50 border-t bg-secondary flex items-center px-4 text-xs font-mono">
+    <footer className="fixed bottom-0 left-0 w-full h-8 z-50 border-t bg-secondary flex items-center px-4 text-xs font-mono text-muted-foreground">
       <div className="flex items-center gap-4 w-full">
         <span>Frontend: v{APP_VERSION}</span>
         <span className="flex items-center gap-1">

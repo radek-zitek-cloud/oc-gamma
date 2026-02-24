@@ -24,10 +24,17 @@ const iconMap = {
 };
 
 const typeStyles = {
-  success: "border-success bg-success text-success-foreground",
-  error: "border-destructive bg-destructive text-destructive-foreground",
-  warning: "border-warning bg-warning text-warning-foreground",
-  info: "border-info bg-info text-info-foreground",
+  success: "border-success bg-card",
+  error: "border-destructive bg-card",
+  warning: "border-warning bg-card",
+  info: "border-info bg-card",
+};
+
+const iconStyles = {
+  success: "text-success",
+  error: "text-destructive",
+  warning: "text-warning",
+  info: "text-info",
 };
 
 export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
@@ -46,11 +53,11 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
         data-testid={`toast-${type}`}
         {...props}
       >
-        <Icon className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+        <Icon className={cn("mt-0.5 h-5 w-5 shrink-0", iconStyles[type])} aria-hidden="true" />
         <div className="flex-1">
-          <h4 className="text-sm font-semibold">{title}</h4>
+          <h4 className="text-sm font-semibold text-foreground">{title}</h4>
           {message && (
-            <p className="mt-1 text-sm opacity-90">{message}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{message}</p>
           )}
         </div>
         {onDismiss && (

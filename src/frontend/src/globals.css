@@ -67,6 +67,23 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: Inter, system-ui, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+  h1, h2, h3 {
+    @apply font-semibold tracking-tight;
+  }
+  h1 {
+    font-size: 1.875rem;
+    line-height: 1.1;
   }
 }
 
@@ -88,6 +105,12 @@
   }
   .text-destructive {
     color: hsl(var(--destructive));
+  }
+  .text-warning {
+    color: hsl(var(--warning));
+  }
+  .text-info {
+    color: hsl(var(--info));
   }
   .text-success-foreground {
     color: hsl(var(--success-foreground));

@@ -24,7 +24,7 @@ export function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/50 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md" data-testid="login-form">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Login</CardTitle>
@@ -73,7 +73,7 @@ export function Login() {
             Don&apos;t have an account?{" "}
             <Link
               to="/register"
-              className="text-primary hover:underline"
+              className="text-accent-foreground hover:underline"
               data-testid="login-register-link"
             >
               Register

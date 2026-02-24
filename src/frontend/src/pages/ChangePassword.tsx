@@ -98,7 +98,7 @@ export function ChangePassword() {
                       current_password: e.target.value,
                     })
                   }
-                  className="bg-primary/10 pr-10"
+                  className="pr-10"
                   data-testid="password-current-input"
                 />
                 <Button
@@ -134,7 +134,7 @@ export function ChangePassword() {
                       new_password: e.target.value,
                     })
                   }
-                  className="bg-primary/10 pr-10"
+                  className="pr-10"
                   data-testid="password-new-input"
                 />
                 <Button
@@ -170,7 +170,7 @@ export function ChangePassword() {
                       confirm_password: e.target.value,
                     })
                   }
-                  className="bg-primary/10 pr-10"
+                  className="pr-10"
                   data-testid="password-confirm-input"
                 />
                 <Button
