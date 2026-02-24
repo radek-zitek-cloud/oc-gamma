@@ -21,7 +21,11 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --success: 142 71% 29%;
+    --success-foreground: 0 0% 98%;
     --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+    --info: 210 100% 50%;
+    --info-foreground: 0 0% 98%;
     --border: 0 0% 90%;
     --input: 0 0% 90%;
     --ring: 45 73% 65%;
@@ -46,7 +50,11 @@
     --destructive: 0 84% 65%;
     --destructive-foreground: 0 0% 98%;
     --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
     --warning: 38 92% 55%;
+    --warning-foreground: 0 0% 98%;
+    --info: 210 100% 55%;
+    --info-foreground: 0 0% 98%;
     --border: 345 5% 20%;
     --input: 345 5% 20%;
     --ring: 45 73% 65%;
@@ -69,10 +77,40 @@
   .bg-destructive {
     background-color: hsl(var(--destructive));
   }
+  .bg-warning {
+    background-color: hsl(var(--warning));
+  }
+  .bg-info {
+    background-color: hsl(var(--info));
+  }
   .text-success {
     color: hsl(var(--success));
   }
   .text-destructive {
     color: hsl(var(--destructive));
+  }
+  .text-success-foreground {
+    color: hsl(var(--success-foreground));
+  }
+  .text-destructive-foreground {
+    color: hsl(var(--destructive-foreground));
+  }
+  .text-warning-foreground {
+    color: hsl(var(--warning-foreground));
+  }
+  .text-info-foreground {
+    color: hsl(var(--info-foreground));
+  }
+  .border-success {
+    border-color: hsl(var(--success));
+  }
+  .border-destructive {
+    border-color: hsl(var(--destructive));
+  }
+  .border-warning {
+    border-color: hsl(var(--warning));
+  }
+  .border-info {
+    border-color: hsl(var(--info));
   }
 }

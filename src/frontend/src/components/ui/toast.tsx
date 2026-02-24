@@ -24,10 +24,10 @@ const iconMap = {
 };
 
 const typeStyles = {
-  success: "border-success/30 bg-success/10 text-success",
-  error: "border-destructive/30 bg-destructive/10 text-destructive",
-  warning: "border-warning/30 bg-warning/10 text-warning",
-  info: "border-info/30 bg-info/10 text-info",
+  success: "border-success bg-success text-success-foreground",
+  error: "border-destructive bg-destructive text-destructive-foreground",
+  warning: "border-warning bg-warning text-warning-foreground",
+  info: "border-info bg-info text-info-foreground",
 };
 
 export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(

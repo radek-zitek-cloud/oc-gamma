@@ -77,7 +77,7 @@ def _check_rate_limit(key: str, max_requests: int, window_seconds: int) -> bool:
     return False
 
 
-def check_rate_limit(request: Request, max_requests: int = 5, window_seconds: int = 60) -> None:
+def check_rate_limit(request: Request, max_requests: int = 5, window_seconds: int = 60, endpoint: str = None) -> None:
     """
     Check and enforce rate limit for the request.
     
@@ -85,14 +85,17 @@ def check_rate_limit(request: Request, max_requests: int = 5, window_seconds: in
         request: FastAPI request object.
         max_requests: Maximum number of requests allowed in the window.
         window_seconds: Time window in seconds.
+        endpoint: Optional endpoint identifier for endpoint-specific rate limiting.
     
     Raises:
         HTTPException: If rate limit is exceeded.
     """
-    key = _get_client_ip(request)
+    ip = _get_client_ip(request)
+    # Use endpoint-specific key if provided, otherwise use IP only
+    key = f"{ip}:{endpoint}" if endpoint else ip
     
     if _check_rate_limit(key, max_requests, window_seconds):
-        logger.warning(f"Rate limit exceeded for IP: {key}")
+        logger.warning(f"Rate limit exceeded for IP: {ip} on endpoint: {endpoint or 'global'}")
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail="Rate limit exceeded. Please try again later.",
@@ -276,6 +279,7 @@ async def update_me(
 )
 async def change_password(
     password_data: PasswordChange,
+    request: Request,
     current_user: Annotated[UserResponse, Depends(get_current_user)],
     repo: Annotated[UserRepository, Depends(get_user_repo)],
 ) -> dict:
@@ -284,6 +288,7 @@ async def change_password(
 
     Args:
         password_data: Current and new password.
+        request: The HTTP request for rate limiting.
         current_user: The authenticated user.
         repo: User repository.
 
@@ -291,8 +296,11 @@ async def change_password(
         Success message.
 
     Raises:
-        HTTPException: If current password is incorrect.
+        HTTPException: If current password is incorrect or rate limit exceeded.
     """
+    # Check rate limit: 3 attempts per minute per IP for password change endpoint
+    check_rate_limit(request, max_requests=3, window_seconds=60, endpoint="password_change")
+
     # Verify current password
     if not verify_password(
         password_data.current_password, current_user.hashed_password

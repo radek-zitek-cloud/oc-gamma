@@ -62,9 +62,9 @@ export function ChangePassword() {
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>
-          <Link to="/profile" data-testid="password-back-button">
+          <Link to="/" data-testid="password-back-button">
             <ArrowLeft className="h-5 w-5" />
-            <span className="sr-only">Back to Profile</span>
+            <span className="sr-only">Back to Dashboard</span>
           </Link>
         </Button>
         <h1 className="text-3xl font-bold">Change Password</h1>
@@ -200,7 +200,7 @@ export function ChangePassword() {
                 asChild
                 data-testid="password-cancel-button"
               >
-                <Link to="/profile">Cancel</Link>
+                <Link to="/">Cancel</Link>
               </Button>
               <Button
                 type="submit"

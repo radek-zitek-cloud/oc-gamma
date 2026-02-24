@@ -89,6 +89,8 @@ class UserInDB(UserBase):
 class PasswordChange(BaseModel):
     """Schema for password change requests with confirmation."""
 
+    model_config = ConfigDict(extra="ignore")
+
     current_password: str
     new_password: str = Field(..., min_length=8, max_length=255)
     confirm_password: str = Field(..., min_length=8, max_length=255)
