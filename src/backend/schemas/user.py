@@ -87,7 +87,18 @@ class UserInDB(UserBase):
 
 
 class PasswordChange(BaseModel):
-    """Schema for password change requests."""
+    """Schema for password change requests with confirmation."""
 
     current_password: str
     new_password: str = Field(..., min_length=8, max_length=255)
+    confirm_password: str = Field(..., min_length=8, max_length=255)
+
+    @field_validator("confirm_password", mode="after")
+    @classmethod
+    def check_passwords_match(cls, v: str, info) -> str:
+        """Validate that confirm_password matches new_password."""
+        # Access other fields from validation context
+        data = info.data
+        if "new_password" in data and v != data["new_password"]:
+            raise ValueError("Passwords do not match")
+        return v

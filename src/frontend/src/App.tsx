@@ -5,8 +5,10 @@ import { AppShell } from "@/components/layout/AppShell";
 import { Dashboard } from "@/pages/Dashboard";
 import { Login } from "@/pages/Login";
 import { Profile } from "@/pages/Profile";
+import { ChangePassword } from "@/pages/ChangePassword";
 import { Register } from "@/pages/Register";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/toaster";
 import { useCurrentUser } from "@/hooks/useAuth";
 import { useAuthStore } from "@/store/authStore";
 
@@ -89,7 +91,16 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/password"
+            element={
+              <ProtectedRoute>
+                <ChangePassword />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
+        <Toaster />
           </AuthChecker>
         </ThemeProvider>
       </BrowserRouter>

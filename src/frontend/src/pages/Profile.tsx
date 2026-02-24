@@ -1,37 +1,25 @@
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useCurrentUser, useUpdateProfile, useChangePassword } from "@/hooks/useAuth";
+import { useCurrentUser, useUpdateProfile } from "@/hooks/useAuth";
 import { useAuthStore } from "@/store/authStore";
 
 export function Profile() {
   const user = useAuthStore((state) => state.user);
   const { isLoading } = useCurrentUser();
   const updateProfile = useUpdateProfile();
-  const changePassword = useChangePassword();
 
   const [profileData, setProfileData] = useState({
     email: user?.email || "",
     full_name: user?.full_name || "",
   });
 
-  const [passwordData, setPasswordData] = useState({
-    current_password: "",
-    new_password: "",
-  });
-
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await updateProfile.mutateAsync(profileData);
-  };
-
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await changePassword.mutateAsync(passwordData);
-    setPasswordData({ current_password: "", new_password: "" });
   };
 
   if (isLoading) {
@@ -40,11 +28,16 @@ export function Profile() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Profile</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Profile</h1>
+      </div>
 
       <Card data-testid="profile-form">
         <CardHeader>
           <CardTitle>Edit Profile</CardTitle>
+          <CardDescription>
+            Update your email address and display name.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleProfileSubmit} className="space-y-4">
@@ -57,6 +50,7 @@ export function Profile() {
                 onChange={(e) =>
                   setProfileData({ ...profileData, email: e.target.value })
                 }
+                className="bg-primary/10"
                 data-testid="profile-email-input"
               />
             </div>
@@ -69,6 +63,7 @@ export function Profile() {
                 onChange={(e) =>
                   setProfileData({ ...profileData, full_name: e.target.value })
                 }
+                className="bg-primary/10"
                 data-testid="profile-fullname-input"
               />
             </div>
@@ -78,53 +73,6 @@ export function Profile() {
               data-testid="profile-save-button"
             >
               {updateProfile.isPending ? "Saving..." : "Save Changes"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Change Password</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handlePasswordSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="current_password">Current Password</Label>
-              <Input
-                id="current_password"
-                type="password"
-                value={passwordData.current_password}
-                onChange={(e) =>
-                  setPasswordData({
-                    ...passwordData,
-                    current_password: e.target.value,
-                  })
-                }
-                data-testid="profile-current-password-input"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="new_password">New Password</Label>
-              <Input
-                id="new_password"
-                type="password"
-                value={passwordData.new_password}
-                onChange={(e) =>
-                  setPasswordData({
-                    ...passwordData,
-                    new_password: e.target.value,
-                  })
-                }
-                data-testid="profile-new-password-input"
-              />
-            </div>
-            <Button
-              type="submit"
-              disabled={changePassword.isPending}
-              data-testid="profile-change-password-button"
-            >
-              {changePassword.isPending ? "Changing..." : "Change Password"}
             </Button>
           </form>
         </CardContent>

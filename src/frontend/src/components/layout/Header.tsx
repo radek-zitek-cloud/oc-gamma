@@ -52,7 +52,7 @@ export function Header() {
                 <User className="mr-2 h-4 w-4" />
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/profile")} data-testid="user-menu-change-password">
+              <DropdownMenuItem onClick={() => navigate("/password")} data-testid="user-menu-change-password">
                 <Lock className="mr-2 h-4 w-4" />
                 Change Password
               </DropdownMenuItem>
